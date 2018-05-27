@@ -15,7 +15,7 @@ export default {
             ];
         },
         isPopperShow (column) {
-            return column.filters && ((!this.fixed && !column.fixed) || (this.fixed === 'left' && column.fixed === 'left') || (this.fixed === 'right' && column.fixed === 'right'));
+            return (column.filters ||column.filterTreeAble)&& ((!this.fixed && !column.fixed) || (this.fixed === 'left' && column.fixed === 'left') || (this.fixed === 'right' && column.fixed === 'right'));
         },
         setCellWidth (column) {
             let width = '';

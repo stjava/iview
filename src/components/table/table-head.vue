@@ -2,21 +2,19 @@
     <table cellspacing="0" cellpadding="0" border="0" :style="styles">
         <colgroup>
             <col v-for="(column, index) in columns" :width="setCellWidth(column)">
-            <col v-if="$parent.showVerticalScrollBar" :width="$parent.scrollBarWidth"/>
+            <col v-if="$parent.showVerticalScrollBar" :width="$parent.scrollBarWidth" />
         </colgroup>
         <thead>
             <tr v-for="(cols, rowIndex) in headRows">
-                <th
-                    v-for="(column, index) in cols"
-                    :colspan="column.colSpan"
-                    :rowspan="column.rowSpan"
-                    :class="alignCls(column)">
+                <th v-for="(column, index) in cols" :colspan="column.colSpan" :rowspan="column.rowSpan" :class="alignCls(column)">
                     <div :class="cellClasses(column)">
                         <template v-if="column.type === 'expand'">
                             <span v-if="!column.renderHeader">{{ column.title || '' }}</span>
                             <render-header v-else :render="column.renderHeader" :column="column" :index="index"></render-header>
                         </template>
-                        <template v-else-if="column.type === 'selection'"><Checkbox :value="isSelectAll" :disabled="!data.length" @on-change="selectAll"></Checkbox></template>
+                        <template v-else-if="column.type === 'selection'">
+                            <Checkbox :value="isSelectAll" :disabled="!data.length" @on-change="selectAll"></Checkbox>
+                        </template>
                         <template v-else>
                             <span v-if="!column.renderHeader" :class="{[prefixCls + '-cell-sort']: column.sortable}" @click="handleSortByHead(getColumn(rowIndex, index)._index)">{{ column.title || '#' }}</span>
                             <render-header v-else :render="column.renderHeader" :column="column" :index="index"></render-header>
@@ -24,17 +22,13 @@
                                 <i class="ivu-icon ivu-icon-arrow-up-b" :class="{on: getColumn(rowIndex, index)._sortType === 'asc'}" @click="handleSort(getColumn(rowIndex, index)._index, 'asc')"></i>
                                 <i class="ivu-icon ivu-icon-arrow-down-b" :class="{on: getColumn(rowIndex, index)._sortType === 'desc'}" @click="handleSort(getColumn(rowIndex, index)._index, 'desc')"></i>
                             </span>
-                            <Poptip
-                                v-if="isPopperShow(column)"
-                                v-model="getColumn(rowIndex, index)._filterVisible"
-                                placement="bottom"
-                                popper-class="ivu-table-popper"
-                                transfer
-                                @on-popper-hide="handleFilterHide(getColumn(rowIndex, index)._index)">
+                            <!-- 过滤 -->
+                            <Poptip v-if="isPopperShow(column)" v-model="getColumn(rowIndex, index)._filterVisible" placement="bottom" popper-class="ivu-table-popper"
+                                transfer @on-popper-hide="handleFilterHide(getColumn(rowIndex, index)._index)">
                                 <span :class="[prefixCls + '-filter']">
                                     <i class="ivu-icon ivu-icon-funnel" :class="{on: getColumn(rowIndex, index)._isFiltered}"></i>
                                 </span>
-
+                                <!-- 多行过滤 -->
                                 <div slot="content" :class="[prefixCls + '-filter-list']" v-if="getColumn(rowIndex, index)._filterMultiple">
                                     <div :class="[prefixCls + '-filter-list-item']">
                                         <checkbox-group v-model="getColumn(rowIndex, index)._filterChecked">
@@ -46,28 +40,35 @@
                                         <i-button type="text" size="small" @click.native="handleReset(getColumn(rowIndex, index)._index)">{{ t('i.table.resetFilter') }}</i-button>
                                     </div>
                                 </div>
+                                <!-- 树形过滤 -->
+                                <div slot="content" :class="[prefixCls + '-filter-list']" v-else-if="getColumn(rowIndex, index)._filterTreeAble">
+                                    <div :class="[prefixCls + '-filter-list-item']">
+                                        <Tree :data="column.filterTreeData" show-checkbox ref="treeFilterRef"></Tree>
+                                    </div>
+                                    <div :class="[prefixCls + '-filter-footer']">
+                                        <i-button type="text" size="small" @click.native="handleGetTree(getColumn(rowIndex, index)._index)">筛选</i-button>
+                                        <i-button type="text" size="small" @click.native="handleResetTree(getColumn(rowIndex, index)._index)">取消</i-button>
+                                    </div>
+                                </div>
                                 <div slot="content" :class="[prefixCls + '-filter-list']" v-else>
                                     <ul :class="[prefixCls + '-filter-list-single']">
-                                        <li
-                                            :class="itemAllClasses(getColumn(rowIndex, index))"
-                                            @click="handleReset(getColumn(rowIndex, index)._index)">{{ t('i.table.clearFilter') }}</li>
-                                        <li
-                                            :class="itemClasses(getColumn(rowIndex, index), item)"
-                                            v-for="item in column.filters"
-                                            @click="handleSelect(getColumn(rowIndex, index)._index, item.value)">{{ item.label }}</li>
+                                        <li :class="itemAllClasses(getColumn(rowIndex, index))" @click="handleReset(getColumn(rowIndex, index)._index)">{{ t('i.table.clearFilter') }}</li>
+                                        <li :class="itemClasses(getColumn(rowIndex, index), item)" v-for="item in column.filters" @click="handleSelect(getColumn(rowIndex, index)._index, item.value)">{{ item.label }}</li>
                                     </ul>
                                 </div>
                             </Poptip>
+                            <!-- end -->
                         </template>
                     </div>
                 </th>
-                
+
                 <th v-if="$parent.showVerticalScrollBar && rowIndex===0" :class='scrollBarCellClass()' :rowspan="headRows.length"></th>
             </tr>
         </thead>
     </table>
 </template>
 <script>
+    import Tree from '../tree/tree.vue';
     import CheckboxGroup from '../checkbox/checkbox-group.vue';
     import Checkbox from '../checkbox/checkbox.vue';
     import Poptip from '../poptip/poptip.vue';
@@ -78,14 +79,21 @@
 
     export default {
         name: 'TableHead',
-        mixins: [ Mixin, Locale ],
-        components: { CheckboxGroup, Checkbox, Poptip, iButton, renderHeader },
+        mixins: [Mixin, Locale],
+        components: {
+            CheckboxGroup,
+            Checkbox,
+            Poptip,
+            iButton,
+            renderHeader,
+            Tree
+        },
         props: {
             prefixCls: String,
             styleObject: Object,
             columns: Array,
             objData: Object,
-            data: Array,    // rebuildData
+            data: Array, // rebuildData
             columnsWidth: Object,
             fixed: {
                 type: [Boolean, String],
@@ -95,16 +103,16 @@
             fixedColumnRows: Array
         },
         computed: {
-            styles () {
+            styles() {
                 const style = Object.assign({}, this.styleObject);
-                const width = parseInt(this.styleObject.width) ;
+                const width = parseInt(this.styleObject.width);
                 style.width = `${width}px`;
                 return style;
             },
-            isSelectAll () {
+            isSelectAll() {
                 let isSelectAll = true;
                 if (!this.data.length) isSelectAll = false;
-                if (!this.data.find(item => !item._disabled)) isSelectAll = false;    // #1751
+                if (!this.data.find(item => !item._disabled)) isSelectAll = false; // #1751
                 for (let i = 0; i < this.data.length; i++) {
                     if (!this.objData[this.data[i]._index]._isChecked && !this.objData[this.data[i]._index]._isDisabled) {
                         isSelectAll = false;
@@ -114,7 +122,7 @@
 
                 return isSelectAll;
             },
-            headRows () {
+            headRows() {
                 const isGroup = this.columnRows.length > 1;
                 if (isGroup) {
                     return this.fixed ? this.fixedColumnRows : this.columnRows;
@@ -124,32 +132,31 @@
             }
         },
         methods: {
-            cellClasses (column) {
+            cellClasses(column) {
                 return [
                     `${this.prefixCls}-cell`,
                     {
-                        [`${this.prefixCls}-hidden`]: !this.fixed && column.fixed && (column.fixed === 'left' || column.fixed === 'right')
+                        [`${this.prefixCls}-hidden`]: !this.fixed && column.fixed && (column.fixed === 'left' ||
+                            column.fixed === 'right')
                     }
                 ];
             },
-            scrollBarCellClass(){
+            scrollBarCellClass() {
                 let hasRightFixed = false;
-                for(let i in this.headRows){
-                    for(let j in this.headRows[i]){
-                        if(this.headRows[i][j].fixed === 'right') {
-                            hasRightFixed=true;
+                for (let i in this.headRows) {
+                    for (let j in this.headRows[i]) {
+                        if (this.headRows[i][j].fixed === 'right') {
+                            hasRightFixed = true;
                             break;
                         }
-                        if(hasRightFixed) break;
+                        if (hasRightFixed) break;
                     }
                 }
-                return [
-                    {
-                        [`${this.prefixCls}-hidden`]: hasRightFixed
-                    }
-                ];
+                return [{
+                    [`${this.prefixCls}-hidden`]: hasRightFixed
+                }];
             },
-            itemClasses (column, item) {
+            itemClasses(column, item) {
                 return [
                     `${this.prefixCls}-filter-select-item`,
                     {
@@ -157,7 +164,7 @@
                     }
                 ];
             },
-            itemAllClasses (column) {
+            itemAllClasses(column) {
                 return [
                     `${this.prefixCls}-filter-select-item`,
                     {
@@ -165,11 +172,11 @@
                     }
                 ];
             },
-            selectAll () {
+            selectAll() {
                 const status = !this.isSelectAll;
                 this.$parent.selectAll(status);
             },
-            handleSort (index, type) {
+            handleSort(index, type) {
                 const column = this.columns[index];
                 const _index = column._index;
 
@@ -178,7 +185,7 @@
                 }
                 this.$parent.handleSort(_index, type);
             },
-            handleSortByHead (index) {
+            handleSortByHead(index) {
                 const column = this.columns[index];
                 if (column.sortable) {
                     const type = column._sortType;
@@ -191,20 +198,20 @@
                     }
                 }
             },
-            handleFilter (index) {
+            handleFilter(index) {
                 this.$parent.handleFilter(index);
             },
-            handleSelect (index, value) {
+            handleSelect(index, value) {
                 this.$parent.handleFilterSelect(index, value);
             },
-            handleReset (index) {
+            handleReset(index) {
                 this.$parent.handleFilterReset(index);
             },
-            handleFilterHide (index) {
+            handleFilterHide(index) {
                 this.$parent.handleFilterHide(index);
             },
             // 因为表头嵌套不是深拷贝，所以没有 _ 开头的方法，在 isGroup 下用此列
-            getColumn (rowIndex, index) {
+            getColumn(rowIndex, index) {
                 const isGroup = this.columnRows.length > 1;
 
                 if (isGroup) {
@@ -213,7 +220,16 @@
                 } else {
                     return this.headRows[rowIndex][index];
                 }
+            },
+            //获取树形筛选的数据
+            handleGetTree(index) {
+                this.$parent.handleGetTree(index);
+            },
+            handleResetTree(index) {
+                this.$parent.handleResetTree(index);
             }
+
         }
     };
+
 </script>

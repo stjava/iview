@@ -1,8 +1,9 @@
 <style>
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
 </style>
 
 <template>
@@ -27,48 +28,45 @@ table {
         <div class="layout-demo-con">
             <Button @click="change">修改Sider绑定的变量来控制收缩</Button>
             <Layout :style="{minHeight: '80vh'}">
-                <Sider 
-                    v-model="isCollapsed"
-                    collapsed-width="0" 
-                    hide-trigger
-                    breakpoint="sm"
-                    @on-collapse="changed"
-                    collapsible
-                    ref="side"
+                <Sider v-model="isCollapsed" collapsed-width="0" hide-trigger breakpoint="sm" @on-collapse="changed" collapsible ref="side"
                     width="200">
                     <Menu width="auto" theme="dark" active-name="1">
                         <MenuGroup title="内容管理">
                             <MenuItem name="1">
-                                <Icon type="document-text"></Icon>
-                                文章管理
+                            <Icon type="document-text"></Icon>
+                            文章管理
                             </MenuItem>
                             <MenuItem name="2">
-                                <Icon type="chatbubbles"></Icon>
-                                评论管理
+                            <Icon type="chatbubbles"></Icon>
+                            评论管理
                             </MenuItem>
                         </MenuGroup>
                         <MenuGroup title="统计分析">
                             <MenuItem name="3">
-                                <Icon type="heart"></Icon>
-                                用户留存
+                            <Icon type="heart"></Icon>
+                            用户留存
                             </MenuItem>
                             <MenuItem name="4">
-                                <Icon type="heart-broken"></Icon>
-                                流失用户
+                            <Icon type="heart-broken"></Icon>
+                            流失用户
                             </MenuItem>
                         </MenuGroup>
                     </Menu>
                     <!-- <div slot="trigger"><Icon type="document-text"></Icon></div> -->
                 </Sider>
                 <Layout class-name="test-class">
-                    <Header :style="{background: '#eee'}"><Button @click="toggleCollapse">菜单</Button></Header>
+                    <Header :style="{background: '#eee'}">
+                        <Button @click="toggleCollapse">菜单</Button>
+                    </Header>
                     <Content :style="{background:'#FFCF9E'}">
                         <!-- <Table border  :columns="columns1" height="500" :data="data1"></Table> -->
                         <!-- <br> -->
                         <!-- <Table border :columns="columns5" :data="data5"></Table> -->
-                        <Table border :columns="columns8"  height="240" :data="data7"></Table>
+                        <Table border :columns="columns8" height="240" :data="data7"></Table>
+                        <Table border :columns="columns" height="240" :data="data" @on-filter-tree-change="showTreeData"></Table>
                     </Content>
                     <Footer>sdfsdsdfsdfs</Footer>
+
                 </Layout>
             </Layout>
         </div>
@@ -76,19 +74,17 @@ table {
 </template>
 <script>
     export default {
-        data () {
+        data() {
             return {
                 isCollapsed: false,
-                columns1: [
-                    {
+                columns1: [{
                         title: 'Name',
                         key: 'name',
                         align: 'center',
                         minWidth: 100,
                         maxWidth: 200,
                         fixed: 'left',
-                        filters: [
-                            {
+                        filters: [{
                                 label: 'Joe',
                                 value: 1
                             },
@@ -98,7 +94,7 @@ table {
                             }
                         ],
                         filterMultiple: false,
-                        filterMethod (value, row) {
+                        filterMethod(value, row) {
                             if (value === 1) {
                                 return row.name === 'Joe';
                             } else if (value === 2) {
@@ -109,8 +105,7 @@ table {
                     {
                         title: 'Other',
                         align: 'center',
-                        children: [
-                            {
+                        children: [{
                                 title: 'Age',
                                 key: 'age',
                                 align: 'center',
@@ -121,8 +116,7 @@ table {
                             {
                                 title: 'Address',
                                 align: 'center',
-                                children: [
-                                    {
+                                children: [{
                                         title: 'Street',
                                         key: 'street',
                                         align: 'center',
@@ -132,8 +126,7 @@ table {
                                     {
                                         title: 'Block',
                                         align: 'center',
-                                        children: [
-                                            {
+                                        children: [{
                                                 title: 'Building',
                                                 key: 'building',
                                                 align: 'center',
@@ -157,8 +150,7 @@ table {
                     {
                         title: 'Company',
                         align: 'center',
-                        children: [
-                            {
+                        children: [{
                                 title: 'Company Address',
                                 key: 'caddress',
                                 align: 'center',
@@ -190,8 +182,7 @@ table {
                         fixed: 'right'
                     }
                 ],
-                columns2: [
-                    {
+                columns2: [{
                         title: 'Name',
                         key: 'name',
                         width: 100,
@@ -248,8 +239,7 @@ table {
                     }
                 ],
                 data1: [],
-                data4: [
-                    {
+                data4: [{
                         name: 'John Brown',
                         age: 18,
                         address: 'New York No. 1 Lake Park',
@@ -314,8 +304,7 @@ table {
                         zip: 100000
                     }
                 ],
-                columns5: [
-                    {
+                columns5: [{
                         title: 'Date',
                         key: 'date',
                         sortable: true
@@ -334,8 +323,7 @@ table {
                         key: 'address'
                     }
                 ],
-                data5: [
-                    {
+                data5: [{
                         name: 'John Brown',
                         age: 18,
                         address: 'New York No. 1 Lake Park',
@@ -360,8 +348,7 @@ table {
                         date: '2016-10-04'
                     }
                 ],
-                columns6: [
-                    {
+                columns6: [{
                         title: 'Date',
                         key: 'date'
                     },
@@ -372,8 +359,7 @@ table {
                     {
                         title: 'Age',
                         key: 'age',
-                        filters: [
-                            {
+                        filters: [{
                                 label: 'Greater than 25',
                                 value: 1
                             },
@@ -383,7 +369,7 @@ table {
                             }
                         ],
                         filterMultiple: false,
-                        filterMethod (value, row) {
+                        filterMethod(value, row) {
                             if (value === 1) {
                                 return row.age > 25;
                             } else if (value === 2) {
@@ -395,8 +381,7 @@ table {
                         title: 'Address',
                         key: 'address',
                         fixed: 'right',
-                        filters: [
-                            {
+                        filters: [{
                                 label: 'New York',
                                 value: 'New York'
                             },
@@ -409,37 +394,35 @@ table {
                                 value: 'Sydney'
                             }
                         ],
-                        filterMethod (value, row) {
+                        filterMethod(value, row) {
                             return row.address.indexOf(value) > -1;
                         }
                     }
                 ],
-                
-                columns7: [
-                    {
+
+                columns7: [{
                         title: 'Date',
                         key: 'date',
                         sortable: true,
-                        width:200,
+                        width: 200,
                     },
                     {
                         title: 'Name',
                         key: 'name',
-                        width:200,
+                        width: 200,
                     },
                     {
                         title: 'Age',
                         key: 'age',
-                        width:200,
+                        width: 200,
                     },
                     {
                         title: 'Address',
                         key: 'address',
-                        width:200,
+                        width: 200,
                     }
                 ],
-                data7: [
-                    {
+                data7: [{
                         name: 'John Brown',
                         age: 18,
                         address: 'New York No. 1 Lake Park',
@@ -464,37 +447,64 @@ table {
                         date: '2016-10-04'
                     }
                 ],
-                
-                columns8: [
-                    {
+
+                columns8: [{
                         title: 'Address',
                         key: 'address',
-                        minWidth:200,
+                        minWidth: 200,
                         //maxWidth:300,
                     },
                     {
                         title: 'Date',
                         key: 'date',
                         sortable: true,
-                        minWidth:100,
-                        maxWidth:150,
+                        minWidth: 100,
+                        maxWidth: 150,
                     },
                     {
                         title: 'Name',
                         key: 'name',
-                        minWidth:100,
-                        maxWidth:200,
+                        minWidth: 100,
+                        maxWidth: 200,
                     },
                     {
                         title: 'Age',
                         key: 'age',
-                        minWidth:60,
-                        maxWidth:100,
+                        minWidth: 60,
+                        maxWidth: 100,
                     },
                 ],
+                columns: [{
+                    title: '啊哈',
+                    "key": "name",
+                    filterTreeAble: true,
+                    filterTreeData: [{
+                        title: '12',
+                        children: [{
+                                title: 'leaf 1-1-1'
+                            },
+                            {
+                                title: 'leaf 1-1-2'
+                            }
+                        ]
+                    }, {
+                        title: '456',
+                        children: [{
+                                title: 'leaf 1-1-1'
+                            },
+                            {
+                                title: 'leaf 1-1-2'
+                            }
+                        ]
+                    }]
+                }, {
+                    title: 'boom sha ka laka',
+                    key: "name",
+                }],
+                data: []
             }
         },
-        mounted () {
+        mounted() {
             const data = [];
             for (let i = 0; i < 20; i++) {
                 data.push({
@@ -512,20 +522,24 @@ table {
             this.data1 = data;
         },
         methods: {
-            toggleCollapse () {
+            toggleCollapse() {
                 this.$refs.side.toggleCollapse();
             },
-            change () {
+            change() {
                 this.isCollapsed = !this.isCollapsed;
             },
-            changed (res) {
+            changed(res) {
                 console.log(res)
+            },
+            showTreeData(data) {
+                console.log(data);
             }
         },
         watch: {
-            isCollapsed (val) {
+            isCollapsed(val) {
                 // console.log(val)
             }
         }
     }
+
 </script>

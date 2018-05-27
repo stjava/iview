@@ -1,31 +1,18 @@
 <template>
     <div :class="wrapClasses" :style="styles">
         <div :class="classes">
-            <div :class="[prefixCls + '-title']" v-if="showSlotHeader" ref="title"><slot name="header"></slot></div>
-            <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header" @mousewheel="handleMouseWheel">
-                <table-head
-                    :prefix-cls="prefixCls"
-                    :styleObject="tableHeaderStyle"
-                    :columns="cloneColumns"
-                    :column-rows="columnRows"
-                    :obj-data="objData"
-                    :columns-width="columnsWidth"
-                    :data="rebuildData"></table-head>
+            <div :class="[prefixCls + '-title']" v-if="showSlotHeader" ref="title">
+                <slot name="header"></slot>
             </div>
-            <div :class="[prefixCls + '-body']" :style="bodyStyle" ref="body" @scroll="handleBodyScroll"
-                v-show="!((!!localeNoDataText && (!data || data.length === 0)) || (!!localeNoFilteredDataText && (!rebuildData || rebuildData.length === 0)))">
-                <table-body
-                    ref="tbody"
-                    :prefix-cls="prefixCls"
-                    :styleObject="tableStyle"
-                    :columns="cloneColumns"
-                    :data="rebuildData"
-                    :columns-width="columnsWidth"
+            <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header" @mousewheel="handleMouseWheel">
+                <table-head :prefix-cls="prefixCls" :styleObject="tableHeaderStyle" :columns="cloneColumns" :column-rows="columnRows" :obj-data="objData"
+                    :columns-width="columnsWidth" :data="rebuildData"></table-head>
+            </div>
+            <div :class="[prefixCls + '-body']" :style="bodyStyle" ref="body" @scroll="handleBodyScroll" v-show="!((!!localeNoDataText && (!data || data.length === 0)) || (!!localeNoFilteredDataText && (!rebuildData || rebuildData.length === 0)))">
+                <table-body ref="tbody" :prefix-cls="prefixCls" :styleObject="tableStyle" :columns="cloneColumns" :data="rebuildData" :columns-width="columnsWidth"
                     :obj-data="objData"></table-body>
             </div>
-            <div
-                :class="[prefixCls + '-tip']" :style="bodyStyle" @scroll="handleBodyScroll"
-                v-show="((!!localeNoDataText && (!data || data.length === 0)) || (!!localeNoFilteredDataText && (!rebuildData || rebuildData.length === 0)))">
+            <div :class="[prefixCls + '-tip']" :style="bodyStyle" @scroll="handleBodyScroll" v-show="((!!localeNoDataText && (!data || data.length === 0)) || (!!localeNoFilteredDataText && (!rebuildData || rebuildData.length === 0)))">
                 <table cellspacing="0" cellpadding="0" border="0">
                     <tbody>
                         <tr>
@@ -39,54 +26,29 @@
             </div>
             <div :class="[prefixCls + '-fixed']" :style="fixedTableStyle" v-if="isLeftFixed">
                 <div :class="fixedHeaderClasses" v-if="showHeader">
-                    <table-head
-                        fixed="left"
-                        :prefix-cls="prefixCls"
-                        :styleObject="fixedTableStyle"
-                        :columns="leftFixedColumns"
-                        :column-rows="columnRows"
-                        :fixed-column-rows="leftFixedColumnRows"
-                        :obj-data="objData"
-                        :columns-width="columnsWidth"
-                        :data="rebuildData"></table-head>
+                    <table-head fixed="left" :prefix-cls="prefixCls" :styleObject="fixedTableStyle" :columns="leftFixedColumns" :column-rows="columnRows"
+                        :fixed-column-rows="leftFixedColumnRows" :obj-data="objData" :columns-width="columnsWidth" :data="rebuildData"></table-head>
                 </div>
                 <div :class="[prefixCls + '-fixed-body']" :style="fixedBodyStyle" ref="fixedBody" @mousewheel="handleFixedMousewheel" @DOMMouseScroll="handleFixedMousewheel">
-                    <table-body
-                        fixed="left"
-                        :prefix-cls="prefixCls"
-                        :styleObject="fixedTableStyle"
-                        :columns="leftFixedColumns"
-                        :data="rebuildData"
-                        :columns-width="columnsWidth"
-                        :obj-data="objData"></table-body>
+                    <table-body fixed="left" :prefix-cls="prefixCls" :styleObject="fixedTableStyle" :columns="leftFixedColumns" :data="rebuildData"
+                        :columns-width="columnsWidth" :obj-data="objData"></table-body>
                 </div>
             </div>
             <div :class="[prefixCls + '-fixed-right']" :style="fixedRightTableStyle" v-if="isRightFixed">
                 <div :class="fixedHeaderClasses" v-if="showHeader">
-                    <table-head
-                        fixed="right"
-                        :prefix-cls="prefixCls"
-                        :styleObject="fixedRightTableStyle"
-                        :columns="rightFixedColumns"
-                        :column-rows="columnRows"
-                        :fixed-column-rows="rightFixedColumnRows"
-                        :obj-data="objData"
-                        :columns-width="columnsWidth"
-                        :data="rebuildData"></table-head>
+                    <table-head fixed="right" :prefix-cls="prefixCls" :styleObject="fixedRightTableStyle" :columns="rightFixedColumns" :column-rows="columnRows"
+                        :fixed-column-rows="rightFixedColumnRows" :obj-data="objData" :columns-width="columnsWidth" :data="rebuildData"></table-head>
                 </div>
-                <div :class="[prefixCls + '-fixed-body']" :style="fixedBodyStyle" ref="fixedRightBody" @mousewheel="handleFixedMousewheel" @DOMMouseScroll="handleFixedMousewheel">
-                    <table-body
-                        fixed="right"
-                        :prefix-cls="prefixCls"
-                        :styleObject="fixedRightTableStyle"
-                        :columns="rightFixedColumns"
-                        :data="rebuildData"
-                        :columns-width="columnsWidth"
-                        :obj-data="objData"></table-body>
+                <div :class="[prefixCls + '-fixed-body']" :style="fixedBodyStyle" ref="fixedRightBody" @mousewheel="handleFixedMousewheel"
+                    @DOMMouseScroll="handleFixedMousewheel">
+                    <table-body fixed="right" :prefix-cls="prefixCls" :styleObject="fixedRightTableStyle" :columns="rightFixedColumns" :data="rebuildData"
+                        :columns-width="columnsWidth" :obj-data="objData"></table-body>
                 </div>
             </div>
             <div :class="[prefixCls + '-fixed-right-header']" :style="fixedRightHeaderStyle" v-if="isRightFixed"></div>
-            <div :class="[prefixCls + '-footer']" v-if="showSlotFooter" ref="footer"><slot name="footer"></slot></div>
+            <div :class="[prefixCls + '-footer']" v-if="showSlotFooter" ref="footer">
+                <slot name="footer"></slot>
+            </div>
         </div>
         <Spin fix size="large" v-if="loading">
             <slot name="loading"></slot>
@@ -97,13 +59,26 @@
     import tableHead from './table-head.vue';
     import tableBody from './table-body.vue';
     import Spin from '../spin/spin.vue';
-    import { oneOf, getStyle, deepCopy, getScrollBarSize } from '../../utils/assist';
-    import { on, off } from '../../utils/dom';
+    import {
+        oneOf,
+        getStyle,
+        deepCopy,
+        getScrollBarSize
+    } from '../../utils/assist';
+    import {
+        on,
+        off
+    } from '../../utils/dom';
     import Csv from '../../utils/csv';
     import ExportCsv from './export-csv';
     import Locale from '../../mixins/locale';
     import elementResizeDetectorMaker from 'element-resize-detector';
-    import { getAllColumns, convertToRows, convertColumnOrder, getRandomStr } from './util';
+    import {
+        getAllColumns,
+        convertToRows,
+        convertColumnOrder,
+        getRandomStr
+    } from './util';
 
     const prefixCls = 'ivu-table';
 
@@ -112,8 +87,12 @@
 
     export default {
         name: 'Table',
-        mixins: [ Locale ],
-        components: { tableHead, tableBody, Spin },
+        mixins: [Locale],
+        components: {
+            tableHead,
+            tableBody,
+            Spin
+        },
         props: {
             data: {
                 type: Array,
@@ -128,7 +107,7 @@
                 }
             },
             size: {
-                validator (value) {
+                validator(value) {
                     return oneOf(value, ['small', 'large', 'default']);
                 }
             },
@@ -160,6 +139,12 @@
                     return '';
                 }
             },
+            rowStyle: {
+                type: Function,
+                default () {
+                    return '';
+                }
+            },
             context: {
                 type: Object
             },
@@ -177,7 +162,7 @@
                 default: false
             }
         },
-        data () {
+        data() {
             const colsWithId = this.makeColumnsId(this.columns);
             return {
                 ready: false,
@@ -185,41 +170,41 @@
                 columnsWidth: {},
                 prefixCls: prefixCls,
                 compiledUids: [],
-                objData: this.makeObjData(),     // checkbox or highlight-row
-                rebuildData: [],    // for sort or filter
+                objData: this.makeObjData(), // checkbox or highlight-row
+                rebuildData: [], // for sort or filter
                 cloneColumns: this.makeColumns(colsWithId),
                 columnRows: this.makeColumnRows(false, colsWithId),
                 leftFixedColumnRows: this.makeColumnRows('left', colsWithId),
                 rightFixedColumnRows: this.makeColumnRows('right', colsWithId),
-                allColumns: getAllColumns(colsWithId),  // for multiple table-head, get columns that have no children
+                allColumns: getAllColumns(colsWithId), // for multiple table-head, get columns that have no children
                 showSlotHeader: true,
                 showSlotFooter: true,
                 bodyHeight: 0,
                 scrollBarWidth: getScrollBarSize(),
                 currentContext: this.context,
-                cloneData: deepCopy(this.data),    // when Cell has a button to delete row data, clickCurrentRow will throw an error, so clone a data
-                showVerticalScrollBar:false,
-                showHorizontalScrollBar:false,
-                headerWidth:0,
-                headerHeight:0,
+                cloneData: deepCopy(this.data), // when Cell has a button to delete row data, clickCurrentRow will throw an error, so clone a data
+                showVerticalScrollBar: false,
+                showHorizontalScrollBar: false,
+                headerWidth: 0,
+                headerHeight: 0,
             };
         },
         computed: {
-            localeNoDataText () {
+            localeNoDataText() {
                 if (this.noDataText === undefined) {
                     return this.t('i.table.noDataText');
                 } else {
                     return this.noDataText;
                 }
             },
-            localeNoFilteredDataText () {
+            localeNoFilteredDataText() {
                 if (this.noFilteredDataText === undefined) {
                     return this.t('i.table.noFilteredDataText');
                 } else {
                     return this.noFilteredDataText;
                 }
             },
-            wrapClasses () {
+            wrapClasses() {
                 return [
                     `${prefixCls}-wrapper`,
                     {
@@ -229,7 +214,7 @@
                     }
                 ];
             },
-            classes () {
+            classes() {
                 return [
                     `${prefixCls}`,
                     {
@@ -240,7 +225,7 @@
                     }
                 ];
             },
-            fixedHeaderClasses () {
+            fixedHeaderClasses() {
                 return [
                     `${prefixCls}-fixed-header`,
                     {
@@ -248,7 +233,7 @@
                     }
                 ];
             },
-            styles () {
+            styles() {
                 let style = {};
                 if (this.height) {
                     const height = parseInt(this.height);
@@ -257,21 +242,21 @@
                 if (this.width) style.width = `${this.width}px`;
                 return style;
             },
-            tableStyle () {
+            tableStyle() {
                 let style = {};
                 if (this.tableWidth !== 0) {
                     let width = '';
                     if (this.bodyHeight === 0) {
                         width = this.tableWidth;
                     } else {
-                        width = this.tableWidth - (this.showVerticalScrollBar?this.scrollBarWidth:0);
+                        width = this.tableWidth - (this.showVerticalScrollBar ? this.scrollBarWidth : 0);
                     }
-//                    const width = this.bodyHeight === 0 ? this.tableWidth : this.tableWidth - this.scrollBarWidth;
+                    //                    const width = this.bodyHeight === 0 ? this.tableWidth : this.tableWidth - this.scrollBarWidth;
                     style.width = `${width}px`;
                 }
                 return style;
             },
-            tableHeaderStyle () {
+            tableHeaderStyle() {
                 let style = {};
                 if (this.tableWidth !== 0) {
                     let width = '';
@@ -280,7 +265,7 @@
                 }
                 return style;
             },
-            fixedTableStyle () {
+            fixedTableStyle() {
                 let style = {};
                 let width = 0;
                 this.leftFixedColumns.forEach((col) => {
@@ -289,7 +274,7 @@
                 style.width = `${width}px`;
                 return style;
             },
-            fixedRightTableStyle () {
+            fixedRightTableStyle() {
                 let style = {};
                 let width = 0;
                 this.rightFixedColumns.forEach((col) => {
@@ -300,18 +285,18 @@
                 style.right = `${this.showVerticalScrollBar?this.scrollBarWidth:0}px`;
                 return style;
             },
-            fixedRightHeaderStyle () {
+            fixedRightHeaderStyle() {
                 let style = {};
                 let width = 0;
-                let height = this.headerHeight+1;
-                if(this.showVerticalScrollBar){
+                let height = this.headerHeight + 1;
+                if (this.showVerticalScrollBar) {
                     width = this.scrollBarWidth;
                 }
                 style.width = `${width}px`;
                 style.height = `${height}px`;
                 return style;
             },
-            bodyStyle () {
+            bodyStyle() {
                 let style = {};
                 if (this.bodyHeight !== 0) {
                     const height = this.bodyHeight;
@@ -319,33 +304,36 @@
                 }
                 return style;
             },
-            fixedBodyStyle () {
+            fixedBodyStyle() {
                 let style = {};
                 if (this.bodyHeight !== 0) {
-                    let height = this.bodyHeight - (this.showHorizontalScrollBar?this.scrollBarWidth:0);
+                    let height = this.bodyHeight - (this.showHorizontalScrollBar ? this.scrollBarWidth : 0);
                     style.height = this.showHorizontalScrollBar ? `${height}px` : `${height - 1}px`;
                 }
                 return style;
             },
-            leftFixedColumns () {
+            leftFixedColumns() {
                 return convertColumnOrder(this.cloneColumns, 'left');
             },
-            rightFixedColumns () {
+            rightFixedColumns() {
                 return convertColumnOrder(this.cloneColumns, 'right');
             },
-            isLeftFixed () {
+            isLeftFixed() {
                 return this.columns.some(col => col.fixed && col.fixed === 'left');
             },
-            isRightFixed () {
+            isRightFixed() {
                 return this.columns.some(col => col.fixed && col.fixed === 'right');
             }
         },
         methods: {
-            rowClsName (index) {
+            rowClsName(index) {
                 return this.rowClassName(this.data[index], index);
             },
-            handleResize () {
-                    //let tableWidth = parseInt(getStyle(this.$el, 'width')) - 1;
+            rowStyleH(index) {
+                return this.rowStyle(this.data[index], index);
+            },
+            handleResize() {
+                //let tableWidth = parseInt(getStyle(this.$el, 'width')) - 1;
                 let tableWidth = this.$el.offsetWidth - 1;
                 let columnsWidth = {};
                 let sumMinWidth = 0;
@@ -356,16 +344,14 @@
                 this.cloneColumns.forEach((col) => {
                     if (col.width) {
                         hasWidthColumns.push(col);
-                    }
-                    else{
+                    } else {
                         noWidthColumns.push(col);
                         if (col.minWidth) {
                             sumMinWidth += col.minWidth;
                         }
                         if (col.maxWidth) {
                             maxWidthColumns.push(col);
-                        }
-                        else {
+                        } else {
                             noMaxWidthColumns.push(col);
                         }
                     }
@@ -374,43 +360,39 @@
 
 
                 let unUsableWidth = hasWidthColumns.map(cell => cell.width).reduce((a, b) => a + b, 0);
-                let usableWidth = tableWidth - unUsableWidth - sumMinWidth - (this.showVerticalScrollBar?this.scrollBarWidth:0) - 1;
+                let usableWidth = tableWidth - unUsableWidth - sumMinWidth - (this.showVerticalScrollBar ? this.scrollBarWidth :
+                    0) - 1;
                 let usableLength = noWidthColumns.length;
                 let columnWidth = 0;
-                if(usableWidth > 0 && usableLength > 0){
+                if (usableWidth > 0 && usableLength > 0) {
                     columnWidth = parseInt(usableWidth / usableLength);
                 }
 
-                    
+
                 for (let i = 0; i < this.cloneColumns.length; i++) {
                     const column = this.cloneColumns[i];
-                    let width = columnWidth + (column.minWidth?column.minWidth:0);
-                    if(column.width){
+                    let width = columnWidth + (column.minWidth ? column.minWidth : 0);
+                    if (column.width) {
                         width = column.width;
-                    }
-                    else{
+                    } else {
                         if (column._width) {
                             width = column._width;
-                        }
-                        else {
-                            if (column.minWidth > width){
+                        } else {
+                            if (column.minWidth > width) {
                                 width = column.minWidth;
-                            }
-                            else if (column.maxWidth < width){
+                            } else if (column.maxWidth < width) {
                                 width = column.maxWidth;
                             }
-                            
-                            if (usableWidth>0) {
-                                usableWidth -= width - (column.minWidth?column.minWidth:0);
+
+                            if (usableWidth > 0) {
+                                usableWidth -= width - (column.minWidth ? column.minWidth : 0);
                                 usableLength--;
                                 if (usableLength > 0) {
                                     columnWidth = parseInt(usableWidth / usableLength);
-                                }
-                                else {
+                                } else {
                                     columnWidth = 0;
                                 }
-                            }
-                            else{
+                            } else {
                                 columnWidth = 0;
                             }
                         }
@@ -423,7 +405,7 @@
                     };
 
                 }
-                if(usableWidth>0) {
+                if (usableWidth > 0) {
                     usableLength = noMaxWidthColumns.length;
                     columnWidth = parseInt(usableWidth / usableLength);
                     for (let i = 0; i < noMaxWidthColumns.length; i++) {
@@ -433,8 +415,7 @@
                             usableLength--;
                             usableWidth -= columnWidth;
                             columnWidth = parseInt(usableWidth / usableLength);
-                        }
-                        else {
+                        } else {
                             columnWidth = 0;
                         }
 
@@ -446,22 +427,23 @@
 
                     }
                 }
-                
-                this.tableWidth = this.cloneColumns.map(cell => cell._width).reduce((a, b) => a + b, 0) + (this.showVerticalScrollBar?this.scrollBarWidth:0) + 1;
+
+                this.tableWidth = this.cloneColumns.map(cell => cell._width).reduce((a, b) => a + b, 0) + (this.showVerticalScrollBar ?
+                    this.scrollBarWidth : 0) + 1;
                 this.columnsWidth = columnsWidth;
                 this.fixedHeader();
             },
-            handleMouseIn (_index) {
+            handleMouseIn(_index) {
                 if (this.disabledHover) return;
                 if (this.objData[_index]._isHover) return;
                 this.objData[_index]._isHover = true;
             },
-            handleMouseOut (_index) {
+            handleMouseOut(_index) {
                 if (this.disabledHover) return;
                 this.objData[_index]._isHover = false;
             },
             // 通用处理 highlightCurrentRow 和 clearCurrentRow
-            handleCurrentRow (type, _index) {
+            handleCurrentRow(type, _index) {
                 let oldIndex = -1;
                 for (let i in this.objData) {
                     if (this.objData[i]._isHighlight) {
@@ -474,30 +456,30 @@
                 const newData = type === 'highlight' ? JSON.parse(JSON.stringify(this.cloneData[_index])) : null;
                 this.$emit('on-current-change', newData, oldData);
             },
-            highlightCurrentRow (_index) {
+            highlightCurrentRow(_index) {
                 if (!this.highlightRow || this.objData[_index]._isHighlight) return;
                 this.handleCurrentRow('highlight', _index);
             },
-            clearCurrentRow () {
+            clearCurrentRow() {
                 if (!this.highlightRow) return;
                 this.handleCurrentRow('clear');
             },
-            clickCurrentRow (_index) {
-                this.highlightCurrentRow (_index);
+            clickCurrentRow(_index) {
+                this.highlightCurrentRow(_index);
                 this.$emit('on-row-click', JSON.parse(JSON.stringify(this.cloneData[_index])), _index);
             },
-            dblclickCurrentRow (_index) {
-                this.highlightCurrentRow (_index);
+            dblclickCurrentRow(_index) {
+                this.highlightCurrentRow(_index);
                 this.$emit('on-row-dblclick', JSON.parse(JSON.stringify(this.cloneData[_index])), _index);
             },
-            getSelection () {
+            getSelection() {
                 let selectionIndexes = [];
                 for (let i in this.objData) {
                     if (this.objData[i]._isChecked) selectionIndexes.push(parseInt(i));
                 }
                 return JSON.parse(JSON.stringify(this.data.filter((data, index) => selectionIndexes.indexOf(index) > -1)));
             },
-            toggleSelect (_index) {
+            toggleSelect(_index) {
                 let data = {};
 
                 for (let i in this.objData) {
@@ -511,10 +493,11 @@
                 this.objData[_index]._isChecked = status;
 
                 const selection = this.getSelection();
-                this.$emit(status ? 'on-select' : 'on-select-cancel', selection, JSON.parse(JSON.stringify(this.data[_index])));
+                this.$emit(status ? 'on-select' : 'on-select-cancel', selection, JSON.parse(JSON.stringify(this.data[
+                    _index])));
                 this.$emit('on-selection-change', selection);
             },
-            toggleExpand (_index) {
+            toggleExpand(_index) {
                 let data = {};
 
                 for (let i in this.objData) {
@@ -527,7 +510,7 @@
                 this.objData[_index]._isExpanded = status;
                 this.$emit('on-expand', JSON.parse(JSON.stringify(this.cloneData[_index])), status);
             },
-            selectAll (status) {
+            selectAll(status) {
                 // this.rebuildData.forEach((data) => {
                 //     if(this.objData[data._index]._isDisabled){
                 //         this.objData[data._index]._isChecked = false;
@@ -536,10 +519,10 @@
                 //     }
 
                 // });
-                for(const data of this.rebuildData){
-                    if(this.objData[data._index]._isDisabled){
+                for (const data of this.rebuildData) {
+                    if (this.objData[data._index]._isDisabled) {
                         continue;
-                    }else{
+                    } else {
                         this.objData[data._index]._isChecked = status;
                     }
                 }
@@ -549,22 +532,22 @@
                 }
                 this.$emit('on-selection-change', selection);
             },
-            
-            fixedHeader () {
+
+            fixedHeader() {
                 if (this.height) {
                     this.$nextTick(() => {
                         const titleHeight = parseInt(getStyle(this.$refs.title, 'height')) || 0;
                         const headerHeight = parseInt(getStyle(this.$refs.header, 'height')) || 0;
                         const footerHeight = parseInt(getStyle(this.$refs.footer, 'height')) || 0;
                         this.bodyHeight = this.height - titleHeight - headerHeight - footerHeight;
-                        this.$nextTick(()=>this.fixedBody());
+                        this.$nextTick(() => this.fixedBody());
                     });
                 } else {
                     this.bodyHeight = 0;
-                    this.$nextTick(()=>this.fixedBody());
+                    this.$nextTick(() => this.fixedBody());
                 }
             },
-            fixedBody (){
+            fixedBody() {
                 if (this.$refs.header) {
                     this.headerWidth = this.$refs.header.children[0].offsetWidth;
                     this.headerHeight = this.$refs.header.children[0].offsetHeight;
@@ -573,33 +556,34 @@
 
                 if (!this.$refs.tbody || !this.data || this.data.length === 0) {
                     this.showVerticalScrollBar = false;
-                }
-                else{
+                } else {
                     let bodyContentEl = this.$refs.tbody.$el;
                     let bodyEl = bodyContentEl.parentElement;
                     let bodyContentHeight = bodyContentEl.offsetHeight;
                     let bodyHeight = bodyEl.offsetHeight;
 
-                    this.showHorizontalScrollBar = bodyEl.offsetWidth < bodyContentEl.offsetWidth + (this.showVerticalScrollBar?this.scrollBarWidth:0);
-                    this.showVerticalScrollBar = this.bodyHeight? bodyHeight - (this.showHorizontalScrollBar?this.scrollBarWidth:0) < bodyContentHeight : false;
-                    
-                    if(this.showVerticalScrollBar){
-                        bodyEl.classList.add(this.prefixCls +'-overflowY');
-                    }else{
-                        bodyEl.classList.remove(this.prefixCls +'-overflowY');
+                    this.showHorizontalScrollBar = bodyEl.offsetWidth < bodyContentEl.offsetWidth + (this.showVerticalScrollBar ?
+                        this.scrollBarWidth : 0);
+                    this.showVerticalScrollBar = this.bodyHeight ? bodyHeight - (this.showHorizontalScrollBar ? this.scrollBarWidth :
+                        0) < bodyContentHeight : false;
+
+                    if (this.showVerticalScrollBar) {
+                        bodyEl.classList.add(this.prefixCls + '-overflowY');
+                    } else {
+                        bodyEl.classList.remove(this.prefixCls + '-overflowY');
                     }
-                    if(this.showHorizontalScrollBar){
-                        bodyEl.classList.add(this.prefixCls +'-overflowX');
-                    }else{
-                        bodyEl.classList.remove(this.prefixCls +'-overflowX');
+                    if (this.showHorizontalScrollBar) {
+                        bodyEl.classList.add(this.prefixCls + '-overflowX');
+                    } else {
+                        bodyEl.classList.remove(this.prefixCls + '-overflowX');
                     }
-                } 
+                }
             },
 
-            hideColumnFilter () {
+            hideColumnFilter() {
                 this.cloneColumns.forEach((col) => col._filterVisible = false);
             },
-            handleBodyScroll (event) {
+            handleBodyScroll(event) {
                 if (this.showHeader) this.$refs.header.scrollLeft = event.target.scrollLeft;
                 if (this.isLeftFixed) this.$refs.fixedBody.scrollTop = event.target.scrollTop;
                 if (this.isRightFixed) this.$refs.fixedRightBody.scrollTop = event.target.scrollTop;
@@ -607,16 +591,16 @@
             },
             handleFixedMousewheel(event) {
                 let deltaY = event.deltaY;
-                if(!deltaY && event.detail){
+                if (!deltaY && event.detail) {
                     deltaY = event.detail * 40;
                 }
-                if(!deltaY && event.wheelDeltaY){
+                if (!deltaY && event.wheelDeltaY) {
                     deltaY = -event.wheelDeltaY;
                 }
-                if(!deltaY && event.wheelDelta){
+                if (!deltaY && event.wheelDelta) {
                     deltaY = -event.wheelDelta;
                 }
-                if(!deltaY) return;
+                if (!deltaY) return;
                 const body = this.$refs.body;
                 const currentScrollTop = body.scrollTop;
                 if (deltaY < 0 && currentScrollTop !== 0) {
@@ -627,20 +611,19 @@
                 }
                 //body.scrollTop += deltaY;
                 let step = 0;
-                let timeId = setInterval(()=>{
+                let timeId = setInterval(() => {
                     step += 5;
-                    if(deltaY>0){
+                    if (deltaY > 0) {
                         body.scrollTop += 2;
-                    }
-                    else{
+                    } else {
                         body.scrollTop -= 2;
                     }
-                    if(step >= Math.abs(deltaY)){
+                    if (step >= Math.abs(deltaY)) {
                         clearInterval(timeId);
                     }
                 }, 5);
             },
-            handleMouseWheel (event) {
+            handleMouseWheel(event) {
                 const deltaX = event.deltaX;
                 const $body = this.$refs.body;
 
@@ -650,7 +633,7 @@
                     $body.scrollLeft = $body.scrollLeft - 10;
                 }
             },
-            sortData (data, type, index) {
+            sortData(data, type, index) {
                 const key = this.cloneColumns[index].key;
                 data.sort((a, b) => {
                     if (this.cloneColumns[index].sortMethod) {
@@ -665,12 +648,12 @@
                 });
                 return data;
             },
-            handleSort (_index, type) {
+            handleSort(_index, type) {
                 const index = this.GetOriginalIndex(_index);
                 this.cloneColumns.forEach((col) => col._sortType = 'normal');
 
                 const key = this.cloneColumns[index].key;
-                if (this.cloneColumns[index].sortable !== 'custom') {    // custom is for remote sort
+                if (this.cloneColumns[index].sortable !== 'custom') { // custom is for remote sort
                     if (type === 'normal') {
                         this.rebuildData = this.makeDataWithFilter();
                     } else {
@@ -685,10 +668,10 @@
                     order: type
                 });
             },
-            handleFilterHide (index) {    // clear checked that not filter now
+            handleFilterHide(index) { // clear checked that not filter now
                 if (!this.cloneColumns[index]._isFiltered) this.cloneColumns[index]._filterChecked = [];
             },
-            filterData (data, column) {
+            filterData(data, column) {
                 return data.filter((row) => {
                     //如果定义了远程过滤方法则忽略此方法
                     if (typeof column.filterRemote === 'function') return true;
@@ -701,7 +684,7 @@
                     return status;
                 });
             },
-            filterOtherData (data, index) {
+            filterOtherData(data, index) {
                 let column = this.cloneColumns[index];
                 if (typeof column.filterRemote === 'function') {
                     column.filterRemote.call(this.$parent, column._filterChecked, column.key, column);
@@ -714,7 +697,7 @@
                 });
                 return data;
             },
-            handleFilter (index) {
+            handleFilter(index) {
                 const column = this.cloneColumns[index];
                 let filterData = this.makeDataWithSort();
 
@@ -733,15 +716,15 @@
              * 左固定和右固定，要区分对待
              * 所以，此方法用来获取正确的 index
              * */
-            GetOriginalIndex (_index) {
+            GetOriginalIndex(_index) {
                 return this.cloneColumns.findIndex(item => item._index === _index);
             },
-            handleFilterSelect (_index, value) {
+            handleFilterSelect(_index, value) {
                 const index = this.GetOriginalIndex(_index);
                 this.cloneColumns[index]._filterChecked = [value];
                 this.handleFilter(index);
             },
-            handleFilterReset (_index) {
+            handleFilterReset(_index) {
                 const index = this.GetOriginalIndex(_index);
                 this.cloneColumns[index]._isFiltered = false;
                 this.cloneColumns[index]._filterVisible = false;
@@ -752,7 +735,16 @@
                 this.rebuildData = filterData;
                 this.$emit('on-filter-change', this.cloneColumns[index]);
             },
-            makeData () {
+            //获取树形筛选的数据
+            handleGetTree(_index) {
+                const index = this.GetOriginalIndex(_index);
+                this.$emit('on-filter-tree-change', this.cloneColumns[index]);
+            },
+            handleResetTree(_index) {
+                const index = this.GetOriginalIndex(_index);
+                this.$emit('on-filter-tree-change', this.cloneColumns[index]);
+            },
+            makeData() {
                 let data = deepCopy(this.data);
                 data.forEach((row, index) => {
                     row._index = index;
@@ -760,7 +752,7 @@
                 });
                 return data;
             },
-            makeDataWithSort () {
+            makeDataWithSort() {
                 let data = this.makeData();
                 let sortType = 'normal';
                 let sortIndex = -1;
@@ -774,23 +766,23 @@
                         break;
                     }
                 }
-                if (sortType !== 'normal' && !isCustom) data =  this.sortData(data, sortType, sortIndex);
+                if (sortType !== 'normal' && !isCustom) data = this.sortData(data, sortType, sortIndex);
                 return data;
             },
-            makeDataWithFilter () {
+            makeDataWithFilter() {
                 let data = this.makeData();
                 this.cloneColumns.forEach(col => data = this.filterData(data, col));
                 return data;
             },
-            makeDataWithSortAndFilter () {
+            makeDataWithSortAndFilter() {
                 let data = this.makeDataWithSort();
                 this.cloneColumns.forEach(col => data = this.filterData(data, col));
                 return data;
             },
-            makeObjData () {
+            makeObjData() {
                 let data = {};
                 this.data.forEach((row, index) => {
-                    const newRow = deepCopy(row);// todo 直接替换
+                    const newRow = deepCopy(row); // todo 直接替换
                     newRow._isHover = false;
                     if (newRow._disabled) {
                         newRow._isDisabled = newRow._disabled;
@@ -817,14 +809,14 @@
                 return data;
             },
             // 修改列，设置一个隐藏的 id，便于后面的多级表头寻找对应的列，否则找不到
-            makeColumnsId (columns) {
+            makeColumnsId(columns) {
                 return columns.map(item => {
                     if ('children' in item) item.children = this.makeColumnsId(item.children);
                     item.__id = getRandomStr(6);
                     return item;
                 });
             },
-            makeColumns (cols) {
+            makeColumns(cols) {
                 // 在 data 时，this.allColumns 暂时为 undefined
                 let columns = deepCopy(getAllColumns(cols));
                 let left = [];
@@ -834,7 +826,7 @@
                 columns.forEach((column, index) => {
                     column._index = index;
                     column._columnKey = columnKey++;
-                    column._width = column.width ? column.width : '';    // update in handleResize()
+                    column._width = column.width ? column.width : ''; // update in handleResize()
                     column._sortType = 'normal';
                     column._filterVisible = false;
                     column._isFiltered = false;
@@ -842,6 +834,9 @@
 
                     if ('filterMultiple' in column) {
                         column._filterMultiple = column.filterMultiple;
+                    } else if ('filterTreeAble' in column) {
+                        // 树形过滤
+                        column._filterTreeAble = column.filterTreeAble;
                     } else {
                         column._filterMultiple = true;
                     }
@@ -865,10 +860,10 @@
                 return left.concat(center).concat(right);
             },
             // create a multiple table-head
-            makeColumnRows (fixedType, cols) {
+            makeColumnRows(fixedType, cols) {
                 return convertToRows(cols, fixedType);
             },
-            exportCsv (params) {
+            exportCsv(params) {
                 if (params.filename) {
                     if (params.filename.indexOf('.csv') === -1) {
                         params.filename += '.csv';
@@ -896,13 +891,13 @@
                 else ExportCsv.download(params.filename, data);
             }
         },
-        created () {
+        created() {
             if (!this.context) this.currentContext = this.$parent;
             this.showSlotHeader = this.$slots.header !== undefined;
             this.showSlotFooter = this.$slots.footer !== undefined;
             this.rebuildData = this.makeDataWithSortAndFilter();
         },
-        mounted () {
+        mounted() {
             this.handleResize();
             this.$nextTick(() => this.ready = true);
 
@@ -916,13 +911,13 @@
                 }
             });
         },
-        beforeDestroy () {
+        beforeDestroy() {
             off(window, 'resize', this.handleResize);
             this.observer.removeListener(this.$el, this.handleResize);
         },
         watch: {
             data: {
-                handler () {
+                handler() {
                     const oldDataLen = this.rebuildData.length;
                     this.objData = this.makeObjData();
                     this.rebuildData = this.makeDataWithSortAndFilter();
@@ -938,7 +933,7 @@
                 deep: true
             },
             columns: {
-                handler () {
+                handler() {
                     // todo 这里有性能问题，可能是左右固定计算属性影响的
                     const colsWithId = this.makeColumnsId(this.columns);
                     this.allColumns = getAllColumns(colsWithId);
@@ -952,15 +947,16 @@
                 },
                 deep: true
             },
-            height () {
+            height() {
                 this.handleResize();
             },
-            showHorizontalScrollBar () {
+            showHorizontalScrollBar() {
                 this.handleResize();
             },
-            showVerticalScrollBar () {
+            showVerticalScrollBar() {
                 this.handleResize();
             }
         }
     };
+
 </script>
