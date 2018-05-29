@@ -1,34 +1,19 @@
 <template>
-    <div
-        :class="classes"
-        @mouseenter="handleMouseenter"
-        @mouseleave="handleMouseleave"
-        v-clickoutside="handleClose">
-        <div
-            :class="[prefixCls + '-rel']"
-            ref="reference"
-            @click="handleClick"
-            @mousedown="handleFocus(false)"
-            @mouseup="handleBlur(false)">
+    <div :class="classes" @mouseenter="handleMouseenter" @mouseleave="handleMouseleave" v-clickoutside="handleClose">
+        <div :class="[prefixCls + '-rel']" ref="reference" @click="handleClick" @mousedown="handleFocus(false)" @mouseup="handleBlur(false)">
             <slot></slot>
         </div>
         <transition name="fade">
-            <div
-                :class="popperClasses"
-                :style="styles"
-                ref="popper"
-                v-show="visible"
-                @click="handleTransferClick"
-                @mouseenter="handleMouseenter"
-                @mouseleave="handleMouseleave"
-                :data-transfer="transfer"
-                v-transfer-dom>
+            <div :class="popperClasses" :style="styles" ref="popper" v-show="visible" @click="handleTransferClick" @mouseenter="handleMouseenter"
+                @mouseleave="handleMouseleave" :data-transfer="transfer" v-transfer-dom>
                 <div :class="[prefixCls + '-content']">
                     <div :class="[prefixCls + '-arrow']"></div>
                     <div :class="[prefixCls + '-inner']" v-if="confirm">
                         <div :class="[prefixCls + '-body']">
                             <i class="ivu-icon ivu-icon-help-circled"></i>
-                            <div :class="[prefixCls + '-body-message']"><slot name="title">{{ title }}</slot></div>
+                            <div :class="[prefixCls + '-body-message']">
+                                <slot name="title">{{ title }}</slot>
+                            </div>
                         </div>
                         <div :class="[prefixCls + '-footer']">
                             <i-button type="text" size="small" @click.native="cancel">{{ localeCancelText }}</i-button>
@@ -36,9 +21,17 @@
                         </div>
                     </div>
                     <div :class="[prefixCls + '-inner']" v-if="!confirm">
-                        <div :class="[prefixCls + '-title']" v-if="showTitle" ref="title"><slot name="title"><div :class="[prefixCls + '-title-inner']">{{ title }}</div></slot></div>
+                        <div :class="[prefixCls + '-title']" v-if="showTitle" ref="title">
+                            <slot name="title">
+                                <div :class="[prefixCls + '-title-inner']">{{ title }}</div>
+                            </slot>
+                        </div>
                         <div :class="[prefixCls + '-body']">
-                            <div :class="[prefixCls + '-body-content']"><slot name="content"><div :class="[prefixCls + '-body-content-inner']">{{ content }}</div></slot></div>
+                            <div :class="[prefixCls + '-body-content']">
+                                <slot name="content">
+                                    <div :class="[prefixCls + '-body-content-inner']">{{ content }}</div>
+                                </slot>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -51,26 +44,35 @@
     import iButton from '../button/button.vue';
     import clickoutside from '../../directives/clickoutside';
     import TransferDom from '../../directives/transfer-dom';
-    import { oneOf } from '../../utils/assist';
+    import {
+        oneOf
+    } from '../../utils/assist';
     import Locale from '../../mixins/locale';
 
     const prefixCls = 'ivu-poptip';
 
     export default {
         name: 'Poptip',
-        mixins: [ Popper, Locale ],
-        directives: { clickoutside, TransferDom },
-        components: { iButton },
+        mixins: [Popper, Locale],
+        directives: {
+            clickoutside,
+            TransferDom
+        },
+        components: {
+            iButton
+        },
         props: {
             trigger: {
-                validator (value) {
+                validator(value) {
                     return oneOf(value, ['click', 'focus', 'hover']);
                 },
                 default: 'click'
             },
             placement: {
-                validator (value) {
-                    return oneOf(value, ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left', 'left-start', 'left-end', 'right', 'right-start', 'right-end']);
+                validator(value) {
+                    return oneOf(value, ['top', 'top-start', 'top-end', 'bottom', 'bottom-start', 'bottom-end', 'left',
+                        'left-start', 'left-end', 'right', 'right-start', 'right-end'
+                    ]);
                 },
                 default: 'top'
             },
@@ -100,18 +102,22 @@
             },
             popperClass: {
                 type: String
+            },
+            showPop: {
+                type: Boolean,
+                default: false
             }
         },
-        data () {
+        data() {
             return {
                 prefixCls: prefixCls,
                 showTitle: true,
                 isInput: false,
-                disableCloseUnderTransfer: false,  // transfer 模式下，点击 slot 也会触发关闭
+                disableCloseUnderTransfer: false, // transfer 模式下，点击 slot 也会触发关闭
             };
         },
         computed: {
-            classes () {
+            classes() {
                 return [
                     `${prefixCls}`,
                     {
@@ -119,7 +125,7 @@
                     }
                 ];
             },
-            popperClasses () {
+            popperClasses() {
                 return [
                     `${prefixCls}-popper`,
                     {
@@ -128,7 +134,7 @@
                     }
                 ];
             },
-            styles () {
+            styles() {
                 let style = {};
 
                 if (this.width) {
@@ -136,14 +142,14 @@
                 }
                 return style;
             },
-            localeOkText () {
+            localeOkText() {
                 if (this.okText === undefined) {
                     return this.t('i.poptip.okText');
                 } else {
                     return this.okText;
                 }
             },
-            localeCancelText () {
+            localeCancelText() {
                 if (this.cancelText === undefined) {
                     return this.t('i.poptip.cancelText');
                 } else {
@@ -152,7 +158,7 @@
             }
         },
         methods: {
-            handleClick () {
+            handleClick() {
                 if (this.confirm) {
                     this.visible = !this.visible;
                     return true;
@@ -162,10 +168,10 @@
                 }
                 this.visible = !this.visible;
             },
-            handleTransferClick () {
+            handleTransferClick() {
                 if (this.transfer) this.disableCloseUnderTransfer = true;
             },
-            handleClose () {
+            handleClose() {
                 if (this.disableCloseUnderTransfer) {
                     this.disableCloseUnderTransfer = false;
                     return false;
@@ -179,19 +185,19 @@
                 }
                 this.visible = false;
             },
-            handleFocus (fromInput = true) {
+            handleFocus(fromInput = true) {
                 if (this.trigger !== 'focus' || this.confirm || (this.isInput && !fromInput)) {
                     return false;
                 }
                 this.visible = true;
             },
-            handleBlur (fromInput = true) {
+            handleBlur(fromInput = true) {
                 if (this.trigger !== 'focus' || this.confirm || (this.isInput && !fromInput)) {
                     return false;
                 }
                 this.visible = false;
             },
-            handleMouseenter () {
+            handleMouseenter() {
                 if (this.trigger !== 'hover' || this.confirm) {
                     return false;
                 }
@@ -200,7 +206,7 @@
                     this.visible = true;
                 }, 100);
             },
-            handleMouseleave () {
+            handleMouseleave() {
                 if (this.trigger !== 'hover' || this.confirm) {
                     return false;
                 }
@@ -211,15 +217,15 @@
                     }, 100);
                 }
             },
-            cancel () {
+            cancel() {
                 this.visible = false;
                 this.$emit('on-cancel');
             },
-            ok () {
+            ok() {
                 this.visible = false;
                 this.$emit('on-ok');
             },
-            getInputChildren () {
+            getInputChildren() {
                 const $input = this.$refs.reference.querySelectorAll('input');
                 const $textarea = this.$refs.reference.querySelectorAll('textarea');
                 let $children = null;
@@ -233,9 +239,9 @@
                 return $children;
             }
         },
-        mounted () {
+        mounted() {
             if (!this.confirm) {
-//                this.showTitle = this.$refs.title.innerHTML != `<div class="${prefixCls}-title-inner"></div>`;
+                //                this.showTitle = this.$refs.title.innerHTML != `<div class="${prefixCls}-title-inner"></div>`;
                 this.showTitle = (this.$slots.title !== undefined) || this.title;
             }
             // if trigger and children is input or textarea,listen focus & blur event
@@ -250,12 +256,18 @@
                 });
             }
         },
-        beforeDestroy () {
+        beforeDestroy() {
             const $children = this.getInputChildren();
             if ($children) {
                 $children.removeEventListener('focus', this.handleFocus, false);
                 $children.removeEventListener('blur', this.handleBlur, false);
             }
+        },
+        watch: {
+            showPop: function (val) {
+                this.visible = val;
+            }
         }
     };
+
 </script>
